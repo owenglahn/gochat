@@ -1,4 +1,4 @@
-module github.com/owenglahn/gochat
+module github.com/owenglahn/gochat/server
 
 go 1.18
 

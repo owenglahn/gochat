@@ -15,7 +15,7 @@ type Config struct {
 
 var config Config
 
-func Configure(args []string) {
+func Configure() {
 	f, err := os.Open("config.yml")
 	if err != nil {
 		log.Fatal(err)
@@ -26,8 +26,5 @@ func Configure(args []string) {
 	err = yamlDecoder.Decode(&config)
 	if err != nil {
 		log.Fatal(err)
-	}
-	if len(args) > 1 {
-		config.HOST = args[1]
 	}
 }

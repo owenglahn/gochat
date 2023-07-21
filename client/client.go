@@ -1,26 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net"
 	"os"
 )
 
-func GetOutboundIP() net.IP {
-	conn, err := net.Dial("udp", "8.8.8.8:80")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
-	localAddr := conn.LocalAddr().(*net.UDPAddr)
-	return localAddr.IP
-}
+var reader bufio.Reader = *bufio.NewReader(os.Stdin)
 
 func Connect() (username string, connection net.Conn) {
 	fmt.Print("Enter username: ")
-	// fmt.Scanln(&username)
-	username = "Owen"
+	fmt.Scanln(&username)
 	connection, err := net.Dial(config.SERVER_TYPE, config.HOST+":"+config.PORT)
 	if err != nil {
 		panic(err)
@@ -33,18 +25,18 @@ func Connect() (username string, connection net.Conn) {
 }
 
 func Prompt() (message string) {
-	fmt.Print("Type message: ")
-	fmt.Scanln(&message)
+	message, err := reader.ReadString('\n')
+	if err != nil {
+		log.Fatal(err)
+	}
 	return
 }
 
 func Listen(connection net.Conn) {
 	for {
-		var buffer []byte
+		var buffer []byte = make([]byte, 100)
 		connection.Read(buffer)
-		if len(buffer) > 0 {
-			fmt.Println(string(buffer))
-		}
+		fmt.Println(string(buffer))
 	}
 }
 
@@ -54,6 +46,7 @@ func main() {
 	log.Println("Client configured")
 	log.Println("Connecting to server...")
 	username, connection := Connect()
+	log.Println("Connected to server. Chat is now open.")
 	go Listen(connection)
 	for {
 		message := Prompt()

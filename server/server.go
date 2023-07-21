@@ -15,14 +15,13 @@ func SendToAllClients(msg []byte) {
 
 func ListenToClient(conn net.Conn) {
 	for {
-		var buffer []byte
+		var buffer []byte = make([]byte, 100)
 		conn.Read(buffer)
 		if string(buffer) == "DISCONNECT" {
 			return
 		}
-		if len(buffer) > 0 {
-			SendToAllClients(buffer)
-		}
+		log.Println("NEW MESSAGE: " + string(buffer))
+		SendToAllClients(buffer)
 	}
 }
 
@@ -42,6 +41,7 @@ func main() {
 		if err != nil {
 			log.Println(err)
 		}
+		log.Println("Client connected. ID: " + conn.LocalAddr().String())
 		CONNECTIONS = append(CONNECTIONS, conn)
 		go ListenToClient(conn)
 	}

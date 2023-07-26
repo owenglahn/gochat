@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	"strings"
 )
 
 var CONNECTIONS []net.Conn
@@ -17,7 +18,7 @@ func ListenToClient(conn net.Conn) {
 	for {
 		var buffer []byte = make([]byte, 100)
 		conn.Read(buffer)
-		if string(buffer) == "DISCONNECT" {
+		if strings.Contains(string(buffer), "DISCONNECT") {
 			return
 		}
 		log.Println("NEW MESSAGE: " + string(buffer))

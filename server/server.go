@@ -19,6 +19,11 @@ func ListenToClient(conn net.Conn) {
 		var buffer []byte = make([]byte, 100)
 		conn.Read(buffer)
 		if strings.Contains(string(buffer), "DISCONNECT") {
+			username := strings.Split(string(buffer), ":")[0]
+			msg := username + " disconnected"
+			log.Println(msg)
+			SendToAllClients([]byte(msg))
+			conn.Close()
 			return
 		}
 		log.Println("NEW MESSAGE: " + string(buffer))

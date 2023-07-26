@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"strings"
 )
 
 var reader bufio.Reader = *bufio.NewReader(os.Stdin)
@@ -47,9 +48,14 @@ func main() {
 	log.Println("Connecting to server...")
 	username, connection := Connect()
 	log.Println("Connected to server. Chat is now open.")
+	log.Println("To leave the chat, type \"DISCONNECT\".")
 	go Listen(connection)
 	for {
 		message := Prompt()
 		connection.Write([]byte(username + ": " + message))
+		if strings.Contains(message, "DISCONNECT") {
+			connection.Close()
+			return
+		}
 	}
 }

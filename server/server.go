@@ -31,11 +31,6 @@ func ListenToClient(conn net.Conn) {
 	}
 }
 
-func shutdown(listener net.Listener) {
-	log.Println("Shutting down server...")
-	listener.close()
-}	
-
 func main() {
 	log.Println("Starting server...")
 	log.Println("Configuring server...")
@@ -46,11 +41,11 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer shutdown(listener)
+	defer listener.Close()
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Println(err)
+			log.Println("Error receiving connection from client: ", err)
 		}
 		log.Println("Client connected. ID: " + conn.LocalAddr().String())
 		CONNECTIONS = append(CONNECTIONS, conn)

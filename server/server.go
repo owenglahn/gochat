@@ -31,6 +31,11 @@ func ListenToClient(conn net.Conn) {
 	}
 }
 
+func shutdown(listener net.Listener) {
+	log.Println("Shutting down server...")
+	listener.close()
+}	
+
 func main() {
 	log.Println("Starting server...")
 	log.Println("Configuring server...")
@@ -41,7 +46,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer listener.Close()
+	defer shutdown(listener)
 	for {
 		conn, err := listener.Accept()
 		if err != nil {

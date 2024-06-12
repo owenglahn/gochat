@@ -45,7 +45,7 @@ func main() {
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
-			log.Println(err)
+			log.Println("Error receiving connection from client: ", err)
 		}
 		log.Println("Client connected. ID: " + conn.LocalAddr().String())
 		CONNECTIONS = append(CONNECTIONS, conn)

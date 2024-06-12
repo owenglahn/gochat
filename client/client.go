@@ -36,7 +36,10 @@ func Prompt() (message string) {
 func Listen(connection net.Conn) {
 	for {
 		var buffer []byte = make([]byte, 100)
-		connection.Read(buffer)
+		_, err := connection.Read(buffer)
+		if err != nil {
+			log.Fatal(err)
+		}
 		fmt.Println(string(buffer))
 	}
 }
